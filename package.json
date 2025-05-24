@@ -2,12 +2,14 @@
   "name": "monorepo",
   "scripts": {
     "changeset": "changeset",
+    "docs": "pnpm --filter vue3 build && rm -rf docs/ && mv ./examples/vue3/dist docs/",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
     "release": "pnpm --filter v-icon-svg build && pnpm exec changeset publish"
   },
   "lint-staged": {
-    "*.{js,ts,css,md,jsx,tsx,vue,json}": "prettier . --write"
+    "*.{js,ts,css,md,jsx,tsx,vue,json}": "prettier . --write",
+    "!docs/**": []
   },
   "dependencies": {
     "@changesets/cli": "^2.26.2"
