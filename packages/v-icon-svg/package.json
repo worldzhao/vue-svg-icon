@@ -1,0 +1,94 @@
+{
+  "name": "v-icon-svg",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Rendering SVG icons in Vue, with support for font size and color styling.",
+  "keywords": [
+    "vue",
+    "vue3",
+    "icon",
+    "svg",
+    "component",
+    "rsbuild",
+    "rspack",
+    "webpack",
+    "plugin"
+  ],
+  "homepage": "https://github.com/worldzhao/v-icon-svg#readme",
+  "bugs": {
+    "url": "https://github.com/worldzhao/v-icon-svg/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/worldzhao/v-icon-svg.git",
+    "directory": "packages/v-icon-svg"
+  },
+  "author": {
+    "name": "worldzhao",
+    "email": "1007326924@qq.com"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/lib/index.js"
+    },
+    "./vue2": {
+      "import": "./dist/vue2/esm/index.js",
+      "require": "./dist/vue2/lib/index.js"
+    },
+    "./plugin": "./plugin/index.js"
+  },
+  "main": "./dist/lib/index.js",
+  "module": "./dist/esm/index.js",
+  "files": [
+    "dist",
+    "src",
+    "plugin",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && npm run build:all && pnpm add vue@^2.7.16 --save-dev && VUE2=1 npm run build:all && pnpm add vue@3.5.14 --save-dev",
+    "build:all": "npm run build:esm && npm run build:cjs",
+    "build:cjs": "BUILD_FORMAT=cjs vite build",
+    "build:esm": "BUILD_FORMAT=esm vite build",
+    "start": "npm run build:esm -- --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "jsdom": "^24",
+    "svgo": "^3"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.1.2",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@vitejs/plugin-vue": "^5",
+    "@vitejs/plugin-vue2": "^2.3.3",
+    "vite": "^6.2.3",
+    "vite-plugin-external": "^4.3.1",
+    "vue": "^3.5.14"
+  },
+  "peerDependencies": {
+    "@rsbuild/core": "^1.0.0",
+    "@rspack/core": "^1.0.0",
+    "vue": "^2.7 || ^3.0",
+    "webpack": "^4.0.0 || ^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@rsbuild/core": {
+      "optional": true
+    },
+    "@rspack/core": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": true
+    }
+  },
+  "volta": {
+    "extends": "../../package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

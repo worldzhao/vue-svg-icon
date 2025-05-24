@@ -1,0 +1,27 @@
+{
+  "name": "monorepo",
+  "scripts": {
+    "changeset": "changeset",
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky install",
+    "release": "pnpm --filter v-icon-svg build && pnpm exec changeset publish"
+  },
+  "lint-staged": {
+    "*.{js,ts,css,md,jsx,tsx,vue,json}": "prettier . --write"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.26.2"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "pnpm": "9.15.5",
+    "prettier": "^2.8.8",
+    "prettier-plugin-packagejson": "^2.4.3"
+  },
+  "packageManager": "pnpm@9.15.5",
+  "volta": {
+    "node": "20.19.0",
+    "pnpm": "9.15.5"
+  }
+}

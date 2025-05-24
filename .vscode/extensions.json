@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "streetsidesoftware.code-spell-checker",
+    "dbaeumer.vscode-eslint",
+    "xicunyang.fe-jump",
+    "ionutvmi.path-autocomplete",
+    "esbenp.prettier-vscode",
+    "mrmlnc.vscode-scss",
+    "bradlc.vscode-tailwindcss",
+    "vue.vscode-typescript-vue-plugin"
+  ]
+}
