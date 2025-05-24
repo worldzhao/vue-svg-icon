@@ -40,5 +40,5 @@ jobs:
           commit: '[CI] Release'
           title: '[CI] Release'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_FOR_ACTION }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
