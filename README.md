@@ -2,6 +2,8 @@
 
 > Renders SVG icon strings in Vue, supporting size and color adjustments via CSS `font-size` and `color` properties.
 
+- [Demo](https://worldzhao.github.io/v-icon-svg/index.html)
+
 English | [简体中文](https://github.com/worldzhao/v-icon-svg/blob/main/README.zh-CN.md)
 
 ## Quick Start

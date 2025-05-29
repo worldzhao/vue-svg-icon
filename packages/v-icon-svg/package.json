@@ -1,6 +1,6 @@
 {
   "name": "v-icon-svg",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": false,
   "description": "Rendering SVG icons in Vue, with support for font size and color styling.",
   "keywords": [
@@ -14,7 +14,7 @@
     "webpack",
     "plugin"
   ],
-  "homepage": "https://github.com/worldzhao/v-icon-svg#readme",
+  "homepage": "https://worldzhao.github.io/v-icon-svg",
   "bugs": {
     "url": "https://github.com/worldzhao/v-icon-svg/issues"
   },

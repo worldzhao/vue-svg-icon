@@ -2,6 +2,8 @@
 
 > 渲染 SVG 图标字符串, 支持通过 CSS `font-size` 和 `color` 属性调整大小和颜色。
 
+- [Demo](https://worldzhao.github.io/v-icon-svg/index.html)
+
 ## 快速开始
 
 **安装**
