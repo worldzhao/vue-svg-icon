@@ -29,10 +29,10 @@ import { SVGIcon } from 'v-icon-svg/vue2';
 
 This package offers two ways of usage:
 
-| Solution                   | Features                                       | Applicable Scenarios                                                                                                    |
-| -------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| **🚀 Runtime Solution**    | Pass SVG string directly, processed at runtime | Dynamic icons, third-party SVGs, high flexibility needs                                                                 |
-| **⚡ Build-time Solution** | Webpack/Rspack plugin, processed at build time | Static icon resources, high performance needs, development experience priority, **currently Vue2 with vue-loader only** |
+| Solution                   | Features                                       | Applicable Scenarios                                                           |
+| -------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------ |
+| **🚀 Runtime Solution**    | Pass SVG string directly, processed at runtime | Dynamic icons, third-party SVGs, high flexibility needs                        |
+| **⚡ Build-time Solution** | Webpack/Rspack plugin, processed at build time | Static icon resources, high performance needs, development experience priority |
 
 ---
 
@@ -169,8 +169,7 @@ The runtime solution supports two rendering modes:
 
 Provides a Webpack/Rspack(Rsbuild) plugin that allows direct import of SVG files as Vue components, eliminating the need to manually handle SVG content.
 
-> Note: Depends on vue-loader's resource handling capabilities. Ensure vue-loader is correctly configured.
-> [unplugin-vue](https://github.com/unplugin/unplugin-vue) is not yet supported.
+> @vue/compiler-sfc counterpart of the vue version is required.
 
 ### Configure in webpack.config.js
 
@@ -183,20 +182,33 @@ module.exports = {
     // ... other plugins
     new SvgIconPlugin({
       include: /src\/assets\/icons/, // Only process SVGs in this specific directory
+      rawQuery: 'raw',
+      urlQuery: 'url',
+      inlineQuery: 'inline',
     }),
   ],
 };
+```
+
+```js
+import ArrowIcon from './arrow.svg'; // Vue Component
+import arrowSvg from './arrow.svg?raw'; // Original string
+import arrowUrl from './arrow.svg?url'; // File URL
+import arrowInline from './arrow.svg?inline'; // Base64 inline
 ```
 
 > Note: After configuring `include`, other SVG rule configurations will ignore resources matched by this plugin's `include`.
 
 ### Configuration Options
 
-| Option  | Type   | Default  | Description                        |
-| ------- | ------ | -------- | ---------------------------------- |
-| test    | RegExp | /\.svg$/ | Matches files to be processed.     |
-| include | RegExp | null     | Only include matching directories. |
-| exclude | RegExp | null     | Exclude matching directories.      |
+| Option      | Type   | Default  | Description                                                     |
+| ----------- | ------ | -------- | --------------------------------------------------------------- |
+| test        | RegExp | /\.svg$/ | Matches files to be processed.                                  |
+| include     | RegExp | null     | Only include matching directories.                              |
+| exclude     | RegExp | null     | Exclude matching directories.                                   |
+| rawQuery    | String | 'raw'    | Return original SVG string with this query parameter            |
+| urlQuery    | String | 'url'    | Returns the SVG file URL with this query parameter.             |
+| inlineQuery | String | 'inline' | Returns base64-encoded inline content with this query parameter |
 
 ### Usage in Vue Components
 
@@ -272,7 +284,7 @@ module.exports = {
 ## 🛠️ Compatibility
 
 - **Vue**: 2.7+ / 3.0+
-- **Build Tools**: Webpack / Rspack 1+ with Vue2 with vue-loader only
+- **Build Tools**: Webpack 5 / Rspack 1
 - **Browsers**: Modern browsers (supporting SVG `<symbol>` and `<use>` elements)
 
 ---

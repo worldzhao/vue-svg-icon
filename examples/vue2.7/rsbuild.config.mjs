@@ -3,6 +3,8 @@ import { pluginVue2 } from '@rsbuild/plugin-vue2';
 import path from 'path';
 import { VueSvgIconPlugin } from 'v-icon-svg/plugin';
 
+process.env.DEBUG_VUE2 = 'true';
+
 export default defineConfig({
   plugins: [pluginVue2()],
   source: {

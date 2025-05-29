@@ -11,10 +11,18 @@ const { optimize } = require('svgo');
  * @param {Boolean} colorless - 是否应用currentColor和不透明样式
  */
 function setSvgAttributes(element, colorless = true) {
+  // 如果是 mask 元素，不做任何处理
+  if (element.tagName && element.tagName.toLowerCase() === 'mask') {
+    return;
+  }
+
   if (colorless) {
     // 设置 fill 属性
     if (element.hasAttribute('fill')) {
-      element.setAttribute('fill', 'currentColor');
+      const fillValue = element.getAttribute('fill');
+      if (fillValue !== 'none') {
+        element.setAttribute('fill', 'currentColor');
+      }
     }
 
     // 设置 fill-opacity 属性
@@ -24,7 +32,10 @@ function setSvgAttributes(element, colorless = true) {
 
     // 设置 stroke 属性
     if (element.hasAttribute('stroke')) {
-      element.setAttribute('stroke', 'currentColor');
+      const strokeValue = element.getAttribute('stroke');
+      if (strokeValue !== 'none') {
+        element.setAttribute('stroke', 'currentColor');
+      }
     }
 
     // 设置 stroke-opacity 属性
@@ -37,6 +48,61 @@ function setSvgAttributes(element, colorless = true) {
   Array.from(element.children).forEach((child) =>
     setSvgAttributes(child, colorless)
   );
+}
+
+/**
+ * 检测和获取 Vue 编译器
+ */
+function getVueCompiler() {
+  const isDebugVue2 = process.env.DEBUG_VUE2 === 'true';
+  try {
+    // 尝试加载 @vue/compiler-sfc
+    const compiler = require(isDebugVue2
+      ? '@vue/compiler-sfc-v2'
+      : '@vue/compiler-sfc');
+    return compiler;
+  } catch (error) {
+    throw new Error(
+      '@vue/compiler-sfc is required for svg-icon-loader. Please install it: npm install @vue/compiler-sfc'
+    );
+  }
+}
+
+/**
+ * 简单的哈希函数
+ */
+function hash(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // 转换为32位整数
+  }
+  return Math.abs(hash).toString(36);
+}
+
+/**
+ * 编译 Vue 模板为 render 函数
+ * @param {string} template - Vue 模板字符串
+ * @param {string} filename - 文件名
+ */
+function compileVueTemplate(template, filename) {
+  const compiler = getVueCompiler();
+
+  try {
+    // 使用 @vue/compiler-sfc 编译模板
+    const { code } = compiler.compileTemplate({
+      source: template,
+      filename,
+      id: hash(filename),
+      scoped: false,
+      slotted: false,
+    });
+
+    return code;
+  } catch (error) {
+    throw new Error(`Vue template compilation failed: ${error.message}`);
+  }
 }
 
 /**
@@ -101,24 +167,29 @@ module.exports = function (source) {
     const componentName =
       'Svg' + fileName.charAt(0).toUpperCase() + fileName.slice(1);
 
-    // 生成Vue组件
-    const vueComponent = `
-<template>
-  <svg
-    class="v-icon-svg"
-    width="1em"
-    height="1em"
-    style="display:inline-block;vertical-align:-0.15em;overflow:hidden;fill:currentColor;"
-    ${attributesString ? attributesString + ' ' : ''}>
-    ${svgContent}
-  </svg>
-</template>
+    // 构建 Vue 模板
+    const template = `
+<svg
+  class="v-icon-svg"
+  width="1em"
+  height="1em"
+  style="display:inline-block;vertical-align:-0.15em;overflow:hidden;"
+  ${attributesString ? attributesString + ' ' : ''}>
+  ${svgContent}
+</svg>
+    `.trim();
 
-<script>
+    // 编译模板为 render 函数
+    const renderCode = compileVueTemplate(template, this.resourcePath);
+
+    // 生成最终的 Vue 组件代码
+    const vueComponent = `
+${renderCode}
+
 export default {
   name: '${componentName}',
+  render: render
 }
-</script>
 `;
 
     callback(null, vueComponent);

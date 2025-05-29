@@ -237,6 +237,13 @@
         </div>
       </div>
     </div>
+    <h2 class="tw-text-2xl tw-font-bold tw-mb-6">构建插件模式</h2>
+    <div class="tw-flex tw-gap-4">
+      <IconMark class="tw-text-[34px] tw-text-blue-500 hover:tw-text-red-500" />
+      <IconShare
+        class="tw-text-[34px] tw-text-blue-500 hover:tw-text-red-500"
+      />
+    </div>
   </div>
 </template>
 
@@ -250,6 +257,8 @@ export default {
 import { ref } from 'vue';
 
 import { SVGIcon } from 'v-icon-svg';
+import IconMark from './icons/mark.svg';
+import IconShare from './icons/share.svg';
 
 const mySvgIconString =
   '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6b9bd2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>';

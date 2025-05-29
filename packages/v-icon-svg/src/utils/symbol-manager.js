@@ -45,10 +45,17 @@ const getSvgContainer = () => {
  * @param {Boolean} colorless - 是否应用currentColor和不透明样式
  */
 const setSvgAttributes = (element, colorless = true) => {
+  // 如果是 mask 元素，不做任何处理
+  if (element.tagName && element.tagName.toLowerCase() === 'mask') {
+    return;
+  }
   if (colorless) {
     // 设置 fill 属性
     if (element.hasAttribute('fill')) {
-      element.setAttribute('fill', 'currentColor');
+      const fillValue = element.getAttribute('fill');
+      if (fillValue !== 'none') {
+        element.setAttribute('fill', 'currentColor');
+      }
     }
 
     // 设置 fill-opacity 属性
@@ -58,7 +65,10 @@ const setSvgAttributes = (element, colorless = true) => {
 
     // 设置 stroke 属性
     if (element.hasAttribute('stroke')) {
-      element.setAttribute('stroke', 'currentColor');
+      const strokeValue = element.getAttribute('stroke');
+      if (strokeValue !== 'none') {
+        element.setAttribute('stroke', 'currentColor');
+      }
     }
 
     // 设置 stroke-opacity 属性

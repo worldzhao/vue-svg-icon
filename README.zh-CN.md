@@ -27,10 +27,10 @@ import { SVGIcon } from 'v-icon-svg/vue2';
 
 本包提供两种使用方式：
 
-| 方案              | 特点                            | 适用场景                                                                    |
-| ----------------- | ------------------------------- | --------------------------------------------------------------------------- |
-| **🚀 运行时方案** | 直接传入 SVG 字符串，运行时处理 | 动态图标、第三方 SVG、灵活性要求高                                          |
-| **⚡ 构建时方案** | Webpack/Rspack 插件，构建时处理 | 静态图标资源、性能要求高、开发体验优先，**暂时仅支持 Vue2 with vue-loader** |
+| 方案              | 特点                            | 适用场景                               |
+| ----------------- | ------------------------------- | -------------------------------------- |
+| **🚀 运行时方案** | 直接传入 SVG 字符串，运行时处理 | 动态图标、第三方 SVG、灵活性要求高     |
+| **⚡ 构建时方案** | Webpack/Rspack 插件，构建时处理 | 静态图标资源、性能要求高、开发体验优先 |
 
 ---
 
@@ -168,8 +168,7 @@ import { SVGIcon } from 'v-icon-svg/vue2';
 
 提供了一个 Webpack/Rspack(Rsbuild) 插件，可以直接将 SVG 文件作为 Vue 组件导入使用，无需手动处理 SVG 内容。
 
-> 注意：依赖 vue-loader 的资源处理能力，请确保 vue-loader 已正确配置
-> [unplugin-vue](https://github.com/unplugin/unplugin-vue) 暂未支持
+> 需要安装 vue 版本对应的 @vue/compiler-sfc 对应版本
 
 ### 在 webpack.config.js 中配置
 
@@ -182,20 +181,33 @@ module.exports = {
     // ... 其他插件
     new SvgIconPlugin({
       include: /src\/assets\/icons/, // 只处理特定目录的SVG
+      rawQuery: 'raw',
+      urlQuery: 'url',
+      inlineQuery: 'inline',
     }),
   ],
 };
+```
+
+```js
+import ArrowIcon from './arrow.svg'; // Vue 组件
+import arrowSvg from './arrow.svg?raw'; // 原始字符串
+import arrowUrl from './arrow.svg?url'; // 文件 URL
+import arrowInline from './arrow.svg?inline'; // Base64 内联
 ```
 
 > 注意: 配置 include 后，其他 svg rule 规则将忽略该插件所配置的 include 的资源。
 
 ### 配置选项
 
-| 选项    | 类型   | 默认值    | 说明             |
-| ------- | ------ | --------- | ---------------- |
-| test    | RegExp | /\\.svg$/ | 匹配要处理的文件 |
-| include | RegExp | null      | 仅包含匹配的目录 |
-| exclude | RegExp | null      | 排除匹配的目录   |
+| 选项        | 类型   | 默认值    | 说明                                                  |
+| ----------- | ------ | --------- | ----------------------------------------------------- |
+| test        | RegExp | /\\.svg$/ | 匹配要处理的文件                                      |
+| include     | RegExp | null      | 仅包含匹配的目录                                      |
+| exclude     | RegExp | null      | 排除匹配的目录                                        |
+| rawQuery    | String | 'raw'     | 当资源包含此 query 参数时，返回原始 SVG 字符串        |
+| urlQuery    | String | 'url'     | 当资源包含此 query 参数时，返回 SVG 文件 URL          |
+| inlineQuery | String | 'inline'  | 当资源包含此 query 参数时，返回 base64 编码的内联内容 |
 
 ### 在 Vue 组件中使用
 
@@ -271,7 +283,7 @@ module.exports = {
 ## 🛠️ 兼容性
 
 - **Vue**: 2.7+ / 3.0+
-- **构建工具**: Webpack / Rspack 1+ with Vue2 with vue-loader only
+- **构建工具**: Webpack 5/ Rspack 1
 - **浏览器**: 现代浏览器（支持 SVG `<symbol>` 和 `<use>` 元素）
 
 ---

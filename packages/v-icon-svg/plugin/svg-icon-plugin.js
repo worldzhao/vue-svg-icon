@@ -13,13 +13,17 @@ class SvgIconPlugin {
         test: /\.svg$/, // 默认匹配所有SVG文件
         include: null, // 可选的包含路径
         exclude: null, // 可选的排除路径
+        rawQuery: 'raw', // 当资源包含此query参数时，返回原始SVG字符串
+        urlQuery: 'url', // 当资源包含此query参数时，返回SVG文件URL
+        inlineQuery: 'inline', // 当资源包含此query参数时，返回base64编码的内联内容
       },
       options
     );
   }
 
   apply(compiler) {
-    const { test, include, exclude } = this.options;
+    const { test, include, exclude, rawQuery, urlQuery, inlineQuery } =
+      this.options;
 
     // 添加loader处理规则
     const rawRules = compiler.options.module.rules.filter(
@@ -58,21 +62,40 @@ class SvgIconPlugin {
       });
     }
 
-    // 获取Vue Loader的路径
-    const vueLoaderPath = require.resolve('vue-loader');
-
-    // 添加组件的SVG处理规则
+    // 使用 oneOf 规则组织所有 SVG 处理方式
     compiler.options.module.rules.push({
       test,
       include,
       exclude,
-      use: [
+      oneOf: [
+        // 原始内容查询参数的 SVG 处理规则
         {
-          loader: vueLoaderPath,
+          resourceQuery: new RegExp(`\\?.*${rawQuery}`), // 匹配包含原始内容参数的查询
+          type: 'asset/source', // 使用 asset/source 直接返回文件内容
         },
+        // URL查询参数的 SVG 处理规则
         {
-          loader: path.resolve(__dirname, 'svg-icon-loader.js'),
-          options: {},
+          resourceQuery: new RegExp(`\\?.*${urlQuery}`), // 匹配包含URL参数的查询
+          type: 'asset/resource', // 使用 asset/resource 返回文件URL
+        },
+        // 内联查询参数的 SVG 处理规则
+        {
+          resourceQuery: new RegExp(`\\?.*${inlineQuery}`), // 匹配包含内联参数的查询
+          type: 'asset/inline', // 使用 asset/inline 返回base64编码的内容
+        },
+        // 默认的 Vue 组件处理规则 - 直接使用 svg-icon-loader
+        {
+          use: [
+            {
+              loader: path.resolve(__dirname, 'svg-icon-loader.js'),
+              options: {
+                // 传递必要的选项给 loader
+                rawQuery,
+                urlQuery,
+                inlineQuery,
+              },
+            },
+          ],
         },
       ],
     });
