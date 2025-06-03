@@ -1,5 +1,11 @@
 # v-icon-svg
 
+## 1.1.1
+
+### Patch Changes
+
+- 6faf98d: chore: update docs
+
 ## 1.1.0
 
 ### Minor Changes
