@@ -174,13 +174,13 @@ Provides a Webpack/Rspack(Rsbuild) plugin that allows direct import of SVG files
 ### Configure in webpack.config.js
 
 ```js
-const SvgIconPlugin = require('v-icon-svg/plugin');
+const { VueSvgIconPlugin } = require('v-icon-svg/plugin');
 
 module.exports = {
   // ... other configurations
   plugins: [
     // ... other plugins
-    new SvgIconPlugin({
+    new VueSvgIconPlugin({
       include: /src\/assets\/icons/, // Only process SVGs in this specific directory
       rawQuery: 'raw',
       urlQuery: 'url',

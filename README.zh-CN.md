@@ -173,13 +173,13 @@ import { SVGIcon } from 'v-icon-svg/vue2';
 ### 在 webpack.config.js 中配置
 
 ```js
-const SvgIconPlugin = require('v-icon-svg/plugin');
+const { VueSvgIconPlugin } = require('v-icon-svg/plugin');
 
 module.exports = {
   // ... 其他配置
   plugins: [
     // ... 其他插件
-    new SvgIconPlugin({
+    new VueSvgIconPlugin({
       include: /src\/assets\/icons/, // 只处理特定目录的SVG
       rawQuery: 'raw',
       urlQuery: 'url',
