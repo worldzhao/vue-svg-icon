@@ -4,7 +4,7 @@ import { VueSvgIconPlugin } from 'v-icon-svg/plugin';
 
 export default defineConfig({
   plugins: [pluginVue()],
-  output: { assetPrefix: '/v-icon-svg' },
+  output: { assetPrefix: '/vue-svg-icon' },
   html: {
     title: 'v-icon-svg',
   },

@@ -16,6 +16,106 @@ pnpm add v-icon-svg
 npm i v-icon-svg
 ```
 
+## Solution Overview
+
+This package offers two ways of usage:
+
+| Solution                                                                                                                             | Features                                       | Applicable Scenarios                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- | ------------------------------------------------------------------------------ |
+| **[⚡ Build-time Solution](https://github.com/worldzhao/vue-svg-icon?tab=readme-ov-file#-build-time-solution-webpackrspack-plugin)** | Webpack/Rspack plugin, processed at build time | Static icon resources, high performance needs, development experience priority |
+| **[🚀 Runtime Solution](https://github.com/worldzhao/vue-svg-icon?tab=readme-ov-file#-runtime-solution)**                            | Pass SVG string directly, processed at runtime | Dynamic icons, third-party SVGs, high flexibility needs                        |
+
+---
+
+## ⚡ Build-time Solution (Webpack/Rspack Plugin)
+
+Provides a Webpack/Rspack(Rsbuild) plugin that allows direct import of SVG files as Vue components, eliminating the need to manually handle SVG content.
+
+> @vue/compiler-sfc counterpart of the vue version is required.
+
+### Configure in webpack.config.js
+
+```js
+const { VueSvgIconPlugin } = require('v-icon-svg/plugin');
+
+module.exports = {
+  // ... other configurations
+  plugins: [
+    // ... other plugins
+    new VueSvgIconPlugin({
+      include: /src\/assets\/icons/, // Only process SVGs in this specific directory
+      rawQuery: 'raw',
+      urlQuery: 'url',
+      inlineQuery: 'inline',
+    }),
+  ],
+};
+```
+
+```js
+import ArrowIcon from './arrow.svg'; // Vue Component
+import arrowSvg from './arrow.svg?raw'; // Original string
+import arrowUrl from './arrow.svg?url'; // File URL
+import arrowInline from './arrow.svg?inline'; // Base64 inline
+```
+
+> Note: After configuring `include`, other SVG rule configurations will ignore resources matched by this plugin's `include`.
+
+### Configuration Options
+
+| Option      | Type   | Default  | Description                                                     |
+| ----------- | ------ | -------- | --------------------------------------------------------------- |
+| test        | RegExp | /\.svg$/ | Matches files to be processed.                                  |
+| include     | RegExp | null     | Only include matching directories.                              |
+| exclude     | RegExp | null     | Exclude matching directories.                                   |
+| rawQuery    | String | 'raw'    | Return original SVG string with this query parameter            |
+| urlQuery    | String | 'url'    | Returns the SVG file URL with this query parameter.             |
+| inlineQuery | String | 'inline' | Returns base64-encoded inline content with this query parameter |
+
+### Usage in Vue Components
+
+```html
+<template>
+  <div>
+    <IconHome class="my-icon" />
+    <IconMenu class="my-icon" />
+  </div>
+</template>
+
+<script>
+  // Directly import SVG files as Vue components
+  import IconHome from '@/assets/icons/home.svg';
+  import IconMenu from '@/assets/icons/menu.svg';
+
+  export default {
+    components: {
+      IconMenu,
+      IconHome,
+    },
+  };
+</script>
+
+<style>
+  .my-icon {
+    font-size: 24px;
+    color: #333;
+  }
+</style>
+```
+
+### Advantages of Build-time Solution
+
+1. **Build-time Processing**: All SVG processing is done at build time, not affecting runtime performance.
+2. **On-demand Loading**: Each SVG becomes an independent Vue component, supporting code splitting.
+3. **Cache Optimization**: Build results can be cached, improving development efficiency.
+4. **Simplified Usage**: Directly import SVG files for a more intuitive development experience.
+
+---
+
+## 🚀 Runtime Solution
+
+Use the `SVGIcon` component in your Vue template and pass the **raw SVG string content** via the `icon` prop.
+
 **Import**
 
 ```js
@@ -24,21 +124,6 @@ import { SVGIcon } from 'v-icon-svg';
 // vue2
 import { SVGIcon } from 'v-icon-svg/vue2';
 ```
-
-## Solution Overview
-
-This package offers two ways of usage:
-
-| Solution                   | Features                                       | Applicable Scenarios                                                           |
-| -------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------ |
-| **🚀 Runtime Solution**    | Pass SVG string directly, processed at runtime | Dynamic icons, third-party SVGs, high flexibility needs                        |
-| **⚡ Build-time Solution** | Webpack/Rspack plugin, processed at build time | Static icon resources, high performance needs, development experience priority |
-
----
-
-## 🚀 Runtime Solution
-
-Use the `SVGIcon` component in your Vue template and pass the **raw SVG string content** via the `icon` prop.
 
 ### Basic Usage
 
@@ -162,91 +247,6 @@ The runtime solution supports two rendering modes:
 - **Smart Caching**: Symbol and Inline modes maintain separate caches to avoid data conflicts.
 
 **Important Constraint:** To ensure icons render correctly, do not use SVG strings containing `<defs>` or `<clipPath>` tags.
-
----
-
-## ⚡ Build-time Solution (Webpack/Rspack Plugin)
-
-Provides a Webpack/Rspack(Rsbuild) plugin that allows direct import of SVG files as Vue components, eliminating the need to manually handle SVG content.
-
-> @vue/compiler-sfc counterpart of the vue version is required.
-
-### Configure in webpack.config.js
-
-```js
-const { VueSvgIconPlugin } = require('v-icon-svg/plugin');
-
-module.exports = {
-  // ... other configurations
-  plugins: [
-    // ... other plugins
-    new VueSvgIconPlugin({
-      include: /src\/assets\/icons/, // Only process SVGs in this specific directory
-      rawQuery: 'raw',
-      urlQuery: 'url',
-      inlineQuery: 'inline',
-    }),
-  ],
-};
-```
-
-```js
-import ArrowIcon from './arrow.svg'; // Vue Component
-import arrowSvg from './arrow.svg?raw'; // Original string
-import arrowUrl from './arrow.svg?url'; // File URL
-import arrowInline from './arrow.svg?inline'; // Base64 inline
-```
-
-> Note: After configuring `include`, other SVG rule configurations will ignore resources matched by this plugin's `include`.
-
-### Configuration Options
-
-| Option      | Type   | Default  | Description                                                     |
-| ----------- | ------ | -------- | --------------------------------------------------------------- |
-| test        | RegExp | /\.svg$/ | Matches files to be processed.                                  |
-| include     | RegExp | null     | Only include matching directories.                              |
-| exclude     | RegExp | null     | Exclude matching directories.                                   |
-| rawQuery    | String | 'raw'    | Return original SVG string with this query parameter            |
-| urlQuery    | String | 'url'    | Returns the SVG file URL with this query parameter.             |
-| inlineQuery | String | 'inline' | Returns base64-encoded inline content with this query parameter |
-
-### Usage in Vue Components
-
-```html
-<template>
-  <div>
-    <IconHome class="my-icon" />
-    <IconMenu class="my-icon" />
-  </div>
-</template>
-
-<script>
-  // Directly import SVG files as Vue components
-  import IconHome from '@/assets/icons/home.svg';
-  import IconMenu from '@/assets/icons/menu.svg';
-
-  export default {
-    components: {
-      IconMenu,
-      IconHome,
-    },
-  };
-</script>
-
-<style>
-  .my-icon {
-    font-size: 24px;
-    color: #333;
-  }
-</style>
-```
-
-### Advantages of Build-time Solution
-
-1. **Build-time Processing**: All SVG processing is done at build time, not affecting runtime performance.
-2. **On-demand Loading**: Each SVG becomes an independent Vue component, supporting code splitting.
-3. **Cache Optimization**: Build results can be cached, improving development efficiency.
-4. **Simplified Usage**: Directly import SVG files for a more intuitive development experience.
 
 ---
 

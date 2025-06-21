@@ -14,14 +14,14 @@
     "webpack",
     "plugin"
   ],
-  "homepage": "https://worldzhao.github.io/v-icon-svg",
+  "homepage": "https://worldzhao.github.io/vue-svg-icon",
   "bugs": {
-    "url": "https://github.com/worldzhao/v-icon-svg/issues"
+    "url": "https://github.com/worldzhao/vue-svg-icon/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/worldzhao/v-icon-svg.git",
-    "directory": "packages/v-icon-svg"
+    "url": "git+https://github.com/worldzhao/vue-svg-icon.git",
+    "directory": "packages/vue-svg-icon"
   },
   "author": {
     "name": "worldzhao",
